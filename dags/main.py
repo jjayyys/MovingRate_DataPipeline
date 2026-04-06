@@ -28,10 +28,7 @@ def check_input(ti):
       - issue_summary   (list)
     """
     df = pd.read_csv(RAW_FILE_PATH)
-    df.columns = [
-        "id" if str(col).startswith("Unnamed:") else col
-        for col in df.columns
-    ]
+    df.columns.values[0] = "id"  # ← rename first column to "id"
     print(f"[Check_Input] Columns after rename: {df.columns.tolist()}")
     issues = []
 
@@ -50,7 +47,6 @@ def check_input(ti):
     null_mask       = df.isnull().any(axis=1)
     bad_row_indices = df[null_mask].index.tolist()
     null_row_count  = len(bad_row_indices)
-
     if null_row_count > 0:
         issues.append(
             f"Null values found in {null_row_count} row(s)"
@@ -91,10 +87,8 @@ def split_record(ti):
 
     # ── Step 1: Backup — read raw file, rename only, no other changes ─────────
     df_raw = pd.read_csv(RAW_FILE_PATH)
-    df_raw.columns = [
-        "id" if str(col).startswith("Unnamed:") else col
-        for col in df_raw.columns
-    ]
+    df_raw.columns.values[0] = "id"  # ← rename first column to "id"
+    
     df_fail = df_raw.loc[bad_row_indices]
     Path(FAIL_PATH).parent.mkdir(parents=True, exist_ok=True)
     df_fail.to_csv(FAIL_PATH, index=False)
