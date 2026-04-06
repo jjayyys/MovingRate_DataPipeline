@@ -1,4 +1,0 @@
-pandas
-apache-airflow-providers-mysql
-pymysql
-sqlalchemy
